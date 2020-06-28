@@ -1,0 +1,71 @@
+<div class="container">
+  <button class="btn btn-primary" routerLink='/add'>Add File</button>
+  <br>
+  <h3>All Images</h3>
+<table class="table table-hover" >
+  <tr>
+    <td>Title</td>
+    <td>File</td>
+    <td>Edit</td>
+    <td>Delete</td>
+  </tr>
+  <tr *ngFor = 'let img of images'>
+    <td>{{img.title}}</td>
+    <td><img src="{{img.file_name}}" style="width: 200px;" alt=""></td>
+    <td>
+      <button routerLink = 'update/{{img._id}}' class="btn btn-primary">Edit</button>
+    </td>
+    <td>
+      <button (click)='delete(img._id)' class="btn btn-primary">Delete</button>
+    </td>
+  </tr>
+</table>
+<br><br>
+<h3>All Musics</h3>
+
+<table class="table table-hover" >
+  <tr>
+    <td>Title</td>
+    <td>File</td>
+    <td>Edit</td>
+    <td>Delete</td>
+  </tr>
+  <tr *ngFor = 'let music of musics'>
+    <td>{{music.title}}</td>
+    <td>
+      <audio controls>
+        <source src="{{music.file_name}}" type="{{music.type}}">
+        Your browser does not support the audio tag.
+      </audio>
+    </td>
+    <td>
+      <button routerLink = 'update/{{music._id}}' class="btn btn-primary">Edit</button>
+    </td>
+    <td><button (click)='delete(music._id)' class="btn btn-primary">Delete</button></td>
+  </tr>
+</table>
+<br><br>
+<h3>All Videos</h3>
+
+<table class="table table-hover" >
+  <tr>
+    <td>Title</td>
+    <td>File</td>
+    <td>Edit</td>
+    <td>Delete</td>
+  </tr>
+  <tr *ngFor = 'let video of videos'>
+    <td>{{video.title}}</td>
+
+    <td>
+      <video width="320" height="240" controls>
+        <source src="{{video.file_name}}" type="{{video.type}}">
+      </video>
+    </td>
+    <td>
+      <button routerLink = 'update/{{video._id}}' class="btn btn-primary">Edit</button>
+    </td>
+    <td><button (click)='delete(video._id)' class="btn btn-primary">Delete</button></td>
+  </tr>
+</table>
+</div>
