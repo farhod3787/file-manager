@@ -4,6 +4,22 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const config = require('./config/config');
 
+
+//  GridFS test
+
+const multer  = require('multer');
+const GridFsStorage = require('multer-gridfs-storage');
+const url =   config.MONGO_URL;
+// Create a storage object with a given configuration
+const storage = new GridFsStorage({ url });
+
+// Set multer storage engine to the newly created object
+const upload = multer({ storage });
+
+
+
+// end test GridFs
+
 const routes = require('./routes');
 const cors = require("cors");
 const app = express();
@@ -42,6 +58,13 @@ app.use((req, res, next) => {
     next()
 });
 
+
+//
+app.post('/profile', upload.single('test'), (req, res, next) => {
+  console.log('AAAA');
+  console.log(req.file);
+})
+//
 app.use('/api', routes.api);
 
 module.exports = app;
