@@ -119,7 +119,7 @@ const create = async (req, res) => {
     let id = req.params.id;
     try {
       let  file = await File.findById(id);
-      const time = files[i].date;
+      const time = file.date;
       const year = time.getFullYear();
       const month = time.getMonth() +1;
       const date = time.getDate();
