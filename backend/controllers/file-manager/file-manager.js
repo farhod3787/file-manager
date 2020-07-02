@@ -3,10 +3,9 @@ const Joi = require('joi');
 const fs = require('fs');
 
 const config = require('../../config/config');
-const { isFunctionDeclaration } = require('typescript');
 
 const create = async (req, res) => {
-  // const { error } = validateCeremony(req.body);
+  // const { error } = validate(req.body);
   // if ( error ) {
     // res.status(400).send(error.details[0].message)
   // } else {
@@ -15,11 +14,13 @@ const create = async (req, res) => {
         let nfile = {
           file_name: file.filename,
           title: body.title,
-          type: file.mimetype
+          type: file.mimetype,
+          date: new Date()
         };
         let newFile = new File(nfile);
         try {
           await newFile.save();
+
           res.send({
             ok: true,
             message: 'File upload created'
@@ -42,26 +43,22 @@ const create = async (req, res) => {
           const musics = [];
           const videos = [];
             for (let i=0; i< files.length; i++) {
+              const time = files[i].date;
+              const year = time.getFullYear();
+              const month = time.getMonth() +1;
+              const date = time.getDate();
+
               if (files[i].type == 'image/png' || files[i].type == 'image/jpg' || files[i].type == 'image/jpeg') {
-
-                  files[i].file_name = config.URL + '/files/images/' + files[i].file_name;
+                  files[i].file_name = config.URL + '/files/' + year + '/' + month + '/' + date + '/images/' + files[i].file_name;
                   images.push(files[i]);
-
                }
               if (files[i].type == 'audio/mpeg' || files[i].type == 'audio/wave' || files[i].type == 'audio/mp3') {
-
-                files[i].file_name = config.URL + '/files/music/' + files[i].file_name;
-
+                files[i].file_name = config.URL + '/files/' + year + '/' + month + '/' + date + '/music/' + files[i].file_name;
                 musics.push(files[i]);
-
               }
-
               if (files[i].type == 'video/mp4' || files[i].type == 'video/x-matroska' || files[i].type == 'video/webm') {
-
-                files[i].file_name = config.URL + '/files/videos/' + files[i].file_name;
-
+                files[i].file_name = config.URL + '/files/' + year + '/' + month + '/' + date + '/videos/' + files[i].file_name;
                 videos.push(files[i]);
-
               }
             }
             res.status(200).json({
@@ -122,9 +119,13 @@ const create = async (req, res) => {
     let id = req.params.id;
     try {
       let  file = await File.findById(id);
+      const time = files[i].date;
+      const year = time.getFullYear();
+      const month = time.getMonth() +1;
+      const date = time.getDate();
 
       if (file.type == 'image/png' || file.type == 'image/jpg' || file.type == 'image/jpeg') {
-            fs.unlink('backend/files/images/' + file.file_name, function (err) {
+            fs.unlink('backend/files/' + year + '/' + month + '/' + date + '/images/' + file.file_name, function (err) {
               if (err) {
               console.log(err.message);}
               else {
@@ -133,7 +134,7 @@ const create = async (req, res) => {
       });
       }
       if (file.type == 'audio/mpeg' || file.type == 'audio/wave' || file.type == 'audio/mp3') {
-            fs.unlink('backend/files/music/' + file.file_name, function (err) {
+        fs.unlink('backend/files/' + year + '/' + month + '/' + date + '/music/' + file.file_name, function (err) {
               if (err) {
               console.log(err.message);}
               else {
@@ -143,7 +144,7 @@ const create = async (req, res) => {
       }
 
       if (file.type == 'video/mp4' || file.type == 'video/x-matroska' || file.type == 'video/webm') {
-              fs.unlink('backend/files/videos/' + file.file_name, function (err) {
+        fs.unlink('backend/files/' + year + '/' + month + '/' + date + '/videos/' + file.file_name, function (err) {
                 if (err) {
                 console.log(err.message);}
                 else {
@@ -166,11 +167,11 @@ const create = async (req, res) => {
     }
   }
 
-  function validateCeremony(ceremony) {
-    const ceremonySchema = {
+  function validate(date) {
+    const Schema = {
         name: Joi.string().required().min(3)
     }
-    return Joi.validate(ceremony, ceremonySchema);
+    return Joi.validate(date, Schema);
     }
 
 

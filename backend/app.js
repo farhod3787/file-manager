@@ -10,7 +10,6 @@ const app = express();
 
 app.use(cors());
 
-
 mongoose.connect(
     config.MONGO_URL
     ).then( () => {
